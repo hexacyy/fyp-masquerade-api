@@ -1,0 +1,11 @@
+Metric,Value
+Total sessions,8.0
+Anomalies detected,3.0
+Normal sessions,5.0
+Anomaly rate (%),37.5
+Normal avg IP reputation,0.43000000000000005
+Anomaly avg IP reputation,0.45
+Normal avg failed logins,0.0
+Anomaly avg failed logins,7.333333333333333
+Normal avg unusual time,0.2
+Anomaly avg unusual time,0.3333333333333333
