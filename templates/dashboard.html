@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Masquerade Detection Dashboard</title>
+</head>
+<body>
+  <h1>Masquerade Detection Dashboard</h1>
+  <p>Total sessions: {{ summary.total }}</p>
+  <p>Anomalies detected: {{ summary.anomalies }}</p>
+  <p>Anomaly rate: {{ "%.2f" % summary.anomaly_rate }}%</p>
+
+  <h2>Recent Predictions</h2>
+  {% if summary.df_tail %}
+  <table border="1">
+    <tr>
+      {% for col in summary.df_tail[0].keys() %}
+        <th>{{ col }}</th>
+      {% endfor %}
+    </tr>
+    {% for row in summary.df_tail %}
+      <tr>
+        {% for value in row.values() %}
+          <td>{{ value }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>No recent predictions to display.</p>
+  {% endif %}
+
+  <br>
+  <a href="/download/log" download>Download Log CSV</a>
+</body>
+</html>
