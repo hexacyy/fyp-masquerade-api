@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, render_template_string
+from flask import Flask, request, jsonify, send_file, render_template, render_template_string
 import joblib
 import pandas as pd
 import csv
@@ -81,6 +81,53 @@ def download_log():
 def download_summary():
     return send_file("prediction_summary_report.csv", as_attachment=True)
 
+# @app.route('/dashboard')
+# def dashboard():
+#     df = pd.read_csv("prediction_log.csv")
+#     # Compute metrics
+#     total = len(df)
+#     anomalies = df['anomaly'].sum()
+#     normal = total - anomalies
+#     anomaly_rate = (anomalies / total) * 100 if total > 0 else 0
+
+#     # Prepare data for charts
+#     summary = {
+#         'total': total,
+#         'anomalies': anomalies,
+#         'normal': normal,
+#         'anomaly_rate': anomaly_rate,
+#         'df_tail': df.tail(50).to_dict(orient='records')
+#     }
+
+#     return render_template("dashboard.html", summary=summary)
+
+@app.route('/dashboard')
+def dashboard():
+    try:
+        df = pd.read_csv("prediction_log.csv")
+        total = len(df)
+        anomalies = df['anomaly'].sum()
+        normal = total - anomalies
+        anomaly_rate = (anomalies / total) * 100 if total > 0 else 0
+
+        summary = {
+            'total': total,
+            'anomalies': anomalies,
+            'normal': normal,
+            'anomaly_rate': anomaly_rate,
+            'df_tail': df.tail(50).to_dict(orient='records') if total > 0 else []
+        }
+    except Exception as e:
+        summary = {
+            'total': 0,
+            'anomalies': 0,
+            'normal': 0,
+            'anomaly_rate': 0,
+            'df_tail': []
+        }
+
+    return render_template("dashboard.html", summary=summary)
+
 if __name__ == '__main__':
     # Make sure static directory exists and has your plots
     if not os.path.exists('static'):
@@ -89,3 +136,5 @@ if __name__ == '__main__':
     os.system('cp anomaly_pie_chart.png static/')
     os.system('cp anomaly_timeline_plot.png static/')
     app.run(debug=True)
+
+
